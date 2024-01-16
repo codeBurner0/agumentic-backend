@@ -47,11 +47,12 @@ router.post('/admin-createEmployee', async (req, res) => {
             const mailOPtions = {
                 from: 'support@caregrid.in',
                 to: req.body.email,
-                subject: 'Request for Reset Password',
-                html: '<div><h2>Thanks! for using CareGrid.</h2><h3>Registered Successfully!!</h3></div>',
+                subject: 'Registered Succesfullly',
+                html:'<div><h2>Thanks! for using Employee Management.</h2><h3>Registered Successfully!!</h3></div>',
             }
-            const send_mail = await transporter.sendMail(mailOPtions)
+            
             res.status(201).send(result);
+            const send_mail = await transporter.sendMail(mailOPtions)
         } else {
             res.json({ message: "validation failed" })
         }
