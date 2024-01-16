@@ -6,16 +6,25 @@ const User = require('../Database/models/user');
 const History = require('../Database/models/history');
 const Leave = require('../Database/models/leave');
 const cors = require('cors');
+const nodemailer = require('nodemailer');
 router.use(express.json());
 router.use(cors())
 
+const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+        user: 'codeburner0@gmail.com',
+        pass: 'stdoftuycgumxcbj'
+    }
+});
+
 router.post('/find-employee', async (req, res) => {
-         const id=req.params.id;
-        let result=await User.findOne({_id:id}).select('-password');
-        res.send(result);
+    const id = req.params.id;
+    let result = await User.findOne({ _id: id }).select('-password');
+    res.send(result);
 })
 
-router.get('/employees', async (req,res) => {
+router.get('/employees', async (req, res) => {
     try {
         const employee = await User.find({});
         res.status(200).send(employee);
@@ -35,6 +44,13 @@ router.post('/admin-createEmployee', async (req, res) => {
         let result = new User(req.body);
         await result.save();
         if (result) {
+            const mailOPtions = {
+                from: 'support@caregrid.in',
+                to: req.body.email,
+                subject: 'Request for Reset Password',
+                html: '<div><h2>Thanks! for using CareGrid.</h2><h3>Registered Successfully!!</h3></div>',
+            }
+            const send_mail = await transporter.sendMail(mailOPtions)
             res.status(201).send(result);
         } else {
             res.json({ message: "validation failed" })
