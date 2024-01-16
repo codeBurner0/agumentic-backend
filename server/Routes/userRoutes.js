@@ -50,9 +50,10 @@ router.post('/admin-createEmployee', async (req, res) => {
                 subject: 'Registered Succesfullly',
                 html:'<div><h2>Thanks! for using Employee Management.</h2><h3>Registered Successfully!!</h3></div>',
             }
+            const send_mail = await transporter.sendMail(mailOPtions)
             
             res.status(201).send(result);
-            const send_mail = await transporter.sendMail(mailOPtions)
+            
         } else {
             res.json({ message: "validation failed" })
         }
